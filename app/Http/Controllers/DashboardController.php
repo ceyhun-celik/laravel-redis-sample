@@ -24,15 +24,15 @@ class DashboardController extends Controller
         /** @var array<string, string> $validated */
         $validated = $request->validated();
 
-        /** @var string $redis_key */
-        $redis_key = collect($validated)
+        /** @var string $filter_key */
+        $filter_key = collect($validated)
             ->filter()
             ->map(fn (string $item, string $key): string => "{$key}#{$item}")
             ->implode(':');
 
         try {
             /** @var Cache|LengthAwarePaginator $users */
-            $users = Cache::tags('users', 'collective')->remember("users:{$redis_key}", 60 * 60, function () use ($validated): LengthAwarePaginator {
+            $users = Cache::tags('users', 'collective')->remember("users:{$filter_key}", 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return User::query()
                     ->select('id', 'name', 'email', 'created_at')
                     ->when(isset($validated['search']) && $validated['search'], function (Builder $query) use ($validated) {
