@@ -21,7 +21,7 @@ class UserObserver
     public function updated(User $user): void
     {
         Cache::tags('users', 'collective')->flush();
-        Cache::tags('users', 'individual')->forget("users#{$user->id}");
+        Cache::tags('users', 'individual')->forget($user->id);
     }
 
     /**
@@ -30,7 +30,7 @@ class UserObserver
     public function deleted(User $user): void
     {
         Cache::tags('users', 'collective')->flush();
-        Cache::tags('users', 'individual')->forget("users#{$user->id}");
+        Cache::tags('users', 'individual')->forget($user->id);
     }
 
     /**

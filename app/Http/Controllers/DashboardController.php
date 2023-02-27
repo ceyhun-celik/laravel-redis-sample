@@ -32,7 +32,7 @@ class DashboardController extends Controller
 
         try {
             /** @var Cache|LengthAwarePaginator $users */
-            $users = Cache::tags('users', 'collective')->remember("users:{$filter_key}", 60 * 60, function () use ($validated): LengthAwarePaginator {
+            $users = Cache::tags('users', 'collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return User::query()
                     ->select('id', 'name', 'email', 'created_at')
                     ->when(isset($validated['search']) && $validated['search'], function (Builder $query) use ($validated) {
@@ -83,7 +83,7 @@ class DashboardController extends Controller
     {
         try {
             /** @var User $user */
-            $user = Cache::tags('users', 'individual')->remember("users#{$id}", 60 * 60, function () use ($id): User {
+            $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email', 'created_at')->find($id);
             });
 
@@ -100,7 +100,7 @@ class DashboardController extends Controller
     {
         try {
             /** @var User $user */
-            $user = Cache::tags('users', 'individual')->remember("users#{$id}", 60 * 60, function () use ($id): User {
+            $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email')->find($id);
             });
 
