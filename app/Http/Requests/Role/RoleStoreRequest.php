@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Dashboard;
+namespace App\Http\Requests\Role;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class DashboardStoreRequest extends FormRequest
+class RoleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +22,7 @@ class DashboardStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => ['required', Rule::unique(User::class)],
-            'password' => 'required|min:3|max:255',
+            'role_name' => 'required|string|max:255',
         ];
     }
 }

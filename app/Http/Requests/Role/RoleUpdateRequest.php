@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Dashboard;
+namespace App\Http\Requests\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DashboardIndexRequest extends FormRequest
+class RoleUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,7 @@ class DashboardIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|string|max:255',
-            'search' => 'nullable|string|max:255',
+            'role_name' => 'required|string|max:255',
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'page' => $this->page ?? '1',
-        ]);
     }
 }

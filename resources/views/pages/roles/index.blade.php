@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Users') }}
+            {{ __('Roles') }}
         </h2>
     </x-slot>
 
@@ -11,15 +11,15 @@
                 <div class="p-6 text-gray-900">
                     <!-- Content Starts Here -->
                     <div class="flex justify-between">
-                        @include('pages.users.partials.search')
+                        @include('pages.roles.partials.search')
 
-                        <a href="{{ route('users.create') }}">
+                        <a href="{{ route('roles.create') }}">
                             <x-primary-button>
                                 {{ __('Create') }}
                             </x-primary-button>
                         </a>
                     </div>
-                    @include('pages.users.partials.table')
+                    @include('pages.roles.partials.table')
                     <!-- Content Ends Here -->
                 </div>
             </div>

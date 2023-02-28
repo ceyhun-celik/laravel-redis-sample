@@ -10,16 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Http\Requests\Dashboard\DashboardIndexRequest;
-use App\Http\Requests\Dashboard\DashboardStoreRequest;
-use App\Http\Requests\Dashboard\DashboardUpdateRequest;
+use App\Http\Requests\User\UserIndexRequest;
+use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(DashboardIndexRequest $request): View
+    public function index(UserIndexRequest $request): View
     {
         /** @var array<string, string> $validated */
         $validated = $request->validated();
@@ -31,7 +31,6 @@ class UserController extends Controller
             ->filter()
             ->map(fn (string $item, string $key): string => "{$key}#{$item}")
             ->implode(':');
-
 
         try {
             /** @var Cache|LengthAwarePaginator $users */
@@ -63,15 +62,16 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DashboardStoreRequest $request): RedirectResponse
+    public function store(UserStoreRequest $request): RedirectResponse
     {
         DB::beginTransaction();
         try {
-            User::query()->create($request->validated());
+            /** @var User $create */
+            $create = User::query()->create($request->validated());
 
             DB::commit();
 
-            return redirect()->route('users.index');
+            return redirect()->route('users.show', $create->id);
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -85,7 +85,7 @@ class UserController extends Controller
     public function show(string $id): View
     {
         try {
-            /** @var User $user */
+            /** @var User|Cache $user */
             $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email', 'created_at')->find($id);
             });
@@ -102,7 +102,7 @@ class UserController extends Controller
     public function edit(string $id): View
     {
         try {
-            /** @var User $user */
+            /** @var User|Cache $user */
             $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email')->find($id);
             });
@@ -116,7 +116,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(DashboardUpdateRequest $request, string $id): RedirectResponse
+    public function update(UserUpdateRequest $request, string $id): RedirectResponse
     {
         /** @var array<string, string> */
         $validated = $request->validated();

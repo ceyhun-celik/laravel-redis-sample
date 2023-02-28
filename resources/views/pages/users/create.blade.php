@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Users') }}
         </h2>
     </x-slot>
 
@@ -17,7 +17,7 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Please fill the blank for create new user.") }}
+                                {{ __("Please fill the blanks for create new user.") }}
                             </p>
                         </header>
 
