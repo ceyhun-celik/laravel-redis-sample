@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 use function Pest\Laravel\get;
@@ -23,7 +24,9 @@ Route::get('/', function () {
 
 Route::middleware(('auth'))->group(function (): void {
 
-    Route::resource('dashboard', DashboardController::class)->middleware('verified');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('verified');
+
+    Route::resource('users', UserController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -37,13 +37,13 @@
                         </div>
 
                         <div class="flex justify-end mt-6 space-x-1">
-                            <a href="{{ route('dashboard.edit', $user->id) }}">
+                            <a href="{{ route('users.edit', $user->id) }}">
                                 <x-primary-button>
                                     {{ __('Edit') }}
                                 </x-primary-button>
                             </a>
 
-                            <form method="post" action="{{ route('dashboard.destroy', $user->id) }}"> @csrf @method('DELETE')
+                            <form method="post" action="{{ route('users.destroy', $user->id) }}"> @csrf @method('DELETE')
                                 <x-danger-button>
                                     {{ __('Delete') }}
                                 </x-danger-button>

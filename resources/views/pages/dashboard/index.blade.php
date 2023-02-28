@@ -10,16 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <!-- Content Starts Here -->
-                    <div class="flex justify-between">
-                        @include('dashboard.partials.search')
-
-                        <a href="{{ route('dashboard.create') }}">
-                            <x-primary-button>
-                                {{ __('Create') }}
-                            </x-primary-button>
-                        </a>
-                    </div>
-                    @include('dashboard.partials.table')
+                    Dashboard Page
                     <!-- Content Ends Here -->
                 </div>
             </div>
