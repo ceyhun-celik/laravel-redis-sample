@@ -12,7 +12,7 @@ class RoleObserver
      */
     public function created(Role $role): void
     {
-        Cache::tags('roles', 'collective')->flush();
+        Cache::tags('roles_collective')->flush();
     }
 
     /**
@@ -20,8 +20,8 @@ class RoleObserver
      */
     public function updated(Role $role): void
     {
-        Cache::tags('roles', 'collective')->flush();
-        Cache::tags('roles', 'individual')->forget($role->id);
+        Cache::tags('roles_collective')->flush();
+        Cache::tags(['roles', 'roles_individual'])->forget($role->id);
     }
 
     /**
@@ -29,8 +29,8 @@ class RoleObserver
      */
     public function deleted(Role $role): void
     {
-        Cache::tags('roles', 'collective')->flush();
-        Cache::tags('roles', 'individual')->forget($role->id);
+        Cache::tags('roles_collective')->flush();
+        Cache::tags(['roles', 'roles_individual'])->forget($role->id);
     }
 
     /**

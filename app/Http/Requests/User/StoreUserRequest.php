@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UserIndexRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +24,9 @@ class UserIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|string|max:255',
-            'search' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => ['required', Rule::unique(User::class)],
+            'password' => 'required|min:3|max:255',
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'page' => $this->page ?? '1',
-        ]);
     }
 }

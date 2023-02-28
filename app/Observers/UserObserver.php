@@ -12,7 +12,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        Cache::tags('users', 'collective')->flush();
+        Cache::tags('users_collective')->flush();
     }
 
     /**
@@ -20,8 +20,8 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        Cache::tags('users', 'collective')->flush();
-        Cache::tags('users', 'individual')->forget($user->id);
+        Cache::tags('users_collective')->flush();
+        Cache::tags('users_individual')->forget($user->id);
     }
 
     /**
@@ -29,8 +29,8 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        Cache::tags('users', 'collective')->flush();
-        Cache::tags('users', 'individual')->forget($user->id);
+        Cache::tags('users_collective')->flush();
+        Cache::tags('users_individual')->forget($user->id);
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Role;
+namespace App\Http\Requests\UserRole;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleIndexRequest extends FormRequest
+class CreateUserRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,7 @@ class RoleIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|string|max:255',
-            'search' => 'nullable|string|max:255',
+            'user_id' => 'required|exists:users,id|unique:user_roles,user_id',
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'page' => $this->page ?? '1',
-        ]);
     }
 }

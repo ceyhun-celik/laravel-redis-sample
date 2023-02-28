@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Role\RoleIndexRequest;
-use App\Http\Requests\Role\RoleStoreRequest;
-use App\Http\Requests\Role\RoleUpdateRequest;
+use App\Http\Requests\Role\IndexRoleRequest;
+use App\Http\Requests\Role\StoreRoleRequest;
+use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +18,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(RoleIndexRequest $request): View
+    public function index(IndexRoleRequest $request): View
     {
         /** @var array<string, string> $validated */
         $validated = $request->validated();
@@ -33,7 +33,7 @@ class RoleController extends Controller
 
         try {
             /** @var Cache|LengthAwarePaginator $roles */
-            $roles = Cache::tags('roles', 'collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
+            $roles = Cache::tags(['roles', 'roles_collective'])->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return Role::query()
                     ->select('id', 'role_name', 'created_at')
                     ->when($validated['search'], function (Builder $query) use ($validated) {
@@ -59,7 +59,7 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleStoreRequest $request): RedirectResponse
+    public function store(StoreRoleRequest $request): RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -83,7 +83,7 @@ class RoleController extends Controller
     {
         try {
             /** @var Role|Cache $role */
-            $role = Cache::tags('roles', 'individual')->remember($id, 60 * 60, function () use ($id) {
+            $role = Cache::tags(['roles', 'roles_individual'])->remember($id, 60 * 60, function () use ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
 
@@ -100,7 +100,7 @@ class RoleController extends Controller
     {
         try {
             /** @var Role|Cache $role */
-            $role = Cache::tags('roles', 'individual')->remember($id, 60 * 60, function ($id) {
+            $role = Cache::tags(['roles', 'roles_individual'])->remember($id, 60 * 60, function ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
 
@@ -113,7 +113,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleUpdateRequest $request, string $id): RedirectResponse
+    public function update(UpdateRoleRequest $request, string $id): RedirectResponse
     {
         DB::beginTransaction();
         try {

@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Role;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UserUpdateRequest extends FormRequest
+class IndexRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +22,18 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer',
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique(User::class)->ignore($this->id)],
-            'password' => 'nullable|string|min:3|max:255|confirmed',
+            'page' => 'required|string|max:255',
+            'search' => 'nullable|string|max:255',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'page' => $this->page ?? '1',
+        ]);
     }
 }

@@ -10,16 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Http\Requests\User\UserIndexRequest;
-use App\Http\Requests\User\UserStoreRequest;
-use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\User\IndexUserRequest;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(UserIndexRequest $request): View
+    public function index(IndexUserRequest $request)#: View
     {
         /** @var array<string, string> $validated */
         $validated = $request->validated();
@@ -34,8 +34,13 @@ class UserController extends Controller
 
         try {
             /** @var Cache|LengthAwarePaginator $users */
-            $users = Cache::tags('users', 'collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
+            $users = Cache::tags('users_collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return User::query()
+                    ->with([
+                        'userRole:id,user_id,role_id' => [
+                            'role:id,role_name'
+                        ],
+                    ])
                     ->select('id', 'name', 'email', 'created_at')
                     ->when($validated['search'], function (Builder $query) use ($validated) {
                         $query->where('name', 'like', "%{$validated['search']}%")
@@ -62,7 +67,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserStoreRequest $request): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -86,8 +91,15 @@ class UserController extends Controller
     {
         try {
             /** @var User|Cache $user */
-            $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
-                return User::query()->select('id', 'name', 'email', 'created_at')->find($id);
+            $user = Cache::tags('users_individual')->remember($id, 60 * 60, function () use ($id): User {
+                return User::query()
+                    ->with([
+                        'userRole:id,user_id,role_id' => [
+                            'role:id,role_name'
+                        ],
+                    ])
+                    ->select('id', 'name', 'email', 'created_at')
+                    ->find($id);
             });
 
             return view('pages.users.show', compact('user'));
@@ -103,7 +115,7 @@ class UserController extends Controller
     {
         try {
             /** @var User|Cache $user */
-            $user = Cache::tags('users', 'individual')->remember($id, 60 * 60, function () use ($id): User {
+            $user = Cache::tags('users_individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email')->find($id);
             });
 
@@ -116,7 +128,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, string $id): RedirectResponse
+    public function update(UpdateUserRequest $request, string $id): RedirectResponse
     {
         /** @var array<string, string> */
         $validated = $request->validated();

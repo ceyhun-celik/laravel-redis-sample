@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -29,6 +30,7 @@ Route::middleware(('auth'))->group(function (): void {
 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('user-roles', UserRoleController::class)->only('create', 'store', 'edit', 'update');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
