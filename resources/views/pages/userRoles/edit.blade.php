@@ -26,7 +26,7 @@
                                 <x-input-label for="user_id" :value="__('User')" />
 
                                 <x-select name="user_id" id="user_id" class="w-64">
-                                    <option value="{{ $user_role->user->id }}">{{ "{$user_role->user->name} - {$user_role->user->email}" }}</option>
+                                    <option value="{{ $user->id }}">{{ "{$user->name} - {$user->email}" }}</option>
                                 </x-select>
                             </div>
 

@@ -33,7 +33,7 @@ class UserController extends Controller
             ->implode(':');
 
         try {
-            /** @var Cache|LengthAwarePaginator $users */
+            /** @var LengthAwarePaginator $users */
             $users = Cache::tags('users_collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return User::query()
                     ->with([
@@ -90,7 +90,7 @@ class UserController extends Controller
     public function show(string $id): View
     {
         try {
-            /** @var User|Cache $user */
+            /** @var User $user */
             $user = Cache::tags('users_individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()
                     ->with([
@@ -114,7 +114,7 @@ class UserController extends Controller
     public function edit(string $id): View
     {
         try {
-            /** @var User|Cache $user */
+            /** @var User $user */
             $user = Cache::tags('users_individual')->remember($id, 60 * 60, function () use ($id): User {
                 return User::query()->select('id', 'name', 'email')->find($id);
             });

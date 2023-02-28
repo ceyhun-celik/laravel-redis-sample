@@ -9,6 +9,7 @@ use App\Models\UserRole;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -24,7 +25,8 @@ class UserRoleController extends Controller
 
         try {
             /** @var User $user */
-            $user = User::query()->select('id', 'name', 'email')->find($validated['user_id']);
+            $user = Cache::tags('users_individual')->get($validated['user_id'])
+                ?? User::query()->select('id', 'name', 'email')->find($validated['user_id']);
 
             /** @var Roles $roles */
             $roles = Role::query()->select('id', 'role_name')->get();
@@ -61,13 +63,16 @@ class UserRoleController extends Controller
     {
         try {
             $user_role = UserRole::query()
-                ->with('user:id,name')
                 ->select('id', 'user_id', 'role_id')
                 ->find($id);
 
+            /** @var User $user */
+            $user = Cache::tags('users_individual')->get($user_role->user_id)
+                ?? User::query()->select('id', 'name', 'email')->find($user_role->user_id);
+
             $roles = Role::query()->select('id', 'role_name')->get();
 
-            return view('pages.userRoles.edit', compact('user_role', 'roles'));
+            return view('pages.userRoles.edit', compact('user_role', 'user', 'roles'));
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }

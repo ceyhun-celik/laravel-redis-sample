@@ -32,7 +32,7 @@ class RoleController extends Controller
             ->implode(':');
 
         try {
-            /** @var Cache|LengthAwarePaginator $roles */
+            /** @var LengthAwarePaginator $roles */
             $roles = Cache::tags('roles_collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return Role::query()
                     ->select('id', 'role_name', 'created_at')
@@ -82,7 +82,7 @@ class RoleController extends Controller
     public function show(string $id): View
     {
         try {
-            /** @var Role|Cache $role */
+            /** @var Role $role */
             $role = Cache::tags('roles_individual')->remember($id, 60 * 60, function () use ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
@@ -99,7 +99,7 @@ class RoleController extends Controller
     public function edit(string $id): View
     {
         try {
-            /** @var Role|Cache $role */
+            /** @var Role $role */
             $role = Cache::tags('roles_individual')->remember($id, 60 * 60, function ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
