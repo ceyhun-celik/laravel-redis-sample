@@ -8,6 +8,7 @@ use App\Http\Requests\UserRole\UpdateUserRoleRequest;
 use App\Models\UserRole;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,9 @@ class UserRoleController extends Controller
                 ?? User::query()->select('id', 'name', 'email')->find($validated['user_id']);
 
             /** @var Roles $roles */
-            $roles = Role::query()->select('id', 'role_name')->get();
+            $roles = Cache::remember('roles', 60 * 60, function (): Collection {
+                return Role::query()->select('id', 'role_name')->get();
+            });
 
             return view('pages.userRoles.create', compact('user', 'roles'));
         } catch (\Throwable $th) {
@@ -70,7 +73,10 @@ class UserRoleController extends Controller
             $user = Cache::tags('users_individual')->get($user_role->user_id)
                 ?? User::query()->select('id', 'name', 'email')->find($user_role->user_id);
 
-            $roles = Role::query()->select('id', 'role_name')->get();
+            /** @var Roles $roles */
+            $roles = Cache::remember('roles', 60 * 60, function (): Collection {
+                return Role::query()->select('id', 'role_name')->get();
+            });
 
             return view('pages.userRoles.edit', compact('user_role', 'user', 'roles'));
         } catch (\Throwable $th) {

@@ -13,6 +13,7 @@ class RoleObserver
     public function created(Role $role): void
     {
         Cache::tags('roles_collective')->flush();
+        Cache::forget('roles');
     }
 
     /**
@@ -22,6 +23,7 @@ class RoleObserver
     {
         Cache::tags('roles_collective')->flush();
         Cache::tags('roles_individual')->forget($role->id);
+        Cache::forget('roles');
     }
 
     /**
@@ -31,6 +33,7 @@ class RoleObserver
     {
         Cache::tags('roles_collective')->flush();
         Cache::tags('roles_individual')->forget($role->id);
+        Cache::forget('roles');
     }
 
     /**

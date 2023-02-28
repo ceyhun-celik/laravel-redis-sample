@@ -32,20 +32,4 @@ class UserObserver
         Cache::tags('users_collective')->flush();
         Cache::tags('users_individual')->forget($user->id);
     }
-
-    /**
-     * Handle the User "restored" event.
-     */
-    public function restored(User $user): void
-    {
-        //
-    }
-
-    /**
-     * Handle the User "force deleted" event.
-     */
-    public function forceDeleted(User $user): void
-    {
-        //
-    }
 }

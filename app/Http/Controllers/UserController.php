@@ -19,7 +19,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexUserRequest $request)#: View
+    public function index(IndexUserRequest $request): View
     {
         /** @var array<string, string> $validated */
         $validated = $request->validated();
