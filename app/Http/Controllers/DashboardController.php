@@ -23,6 +23,8 @@ class DashboardController extends Controller
     {
         /** @var array<string, string> $validated */
         $validated = $request->validated();
+        
+        $validated['search'] ??= null;
 
         /** @var string $filter_key */
         $filter_key = collect($validated)
@@ -30,12 +32,13 @@ class DashboardController extends Controller
             ->map(fn (string $item, string $key): string => "{$key}#{$item}")
             ->implode(':');
 
+
         try {
             /** @var Cache|LengthAwarePaginator $users */
             $users = Cache::tags('users', 'collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return User::query()
                     ->select('id', 'name', 'email', 'created_at')
-                    ->when(isset($validated['search']) && $validated['search'], function (Builder $query) use ($validated) {
+                    ->when($validated['search'], function (Builder $query) use ($validated) {
                         $query->where('name', 'like', "%{$validated['search']}%")
                             ->orWhere('email', 'like', "%{$validated['search']}%");
                     })
