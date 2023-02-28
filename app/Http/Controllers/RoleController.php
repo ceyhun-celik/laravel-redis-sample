@@ -33,7 +33,7 @@ class RoleController extends Controller
 
         try {
             /** @var Cache|LengthAwarePaginator $roles */
-            $roles = Cache::tags(['roles', 'roles_collective'])->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
+            $roles = Cache::tags('roles_collective')->remember($filter_key, 60 * 60, function () use ($validated): LengthAwarePaginator {
                 return Role::query()
                     ->select('id', 'role_name', 'created_at')
                     ->when($validated['search'], function (Builder $query) use ($validated) {
@@ -83,7 +83,7 @@ class RoleController extends Controller
     {
         try {
             /** @var Role|Cache $role */
-            $role = Cache::tags(['roles', 'roles_individual'])->remember($id, 60 * 60, function () use ($id) {
+            $role = Cache::tags('roles_individual')->remember($id, 60 * 60, function () use ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
 
@@ -100,7 +100,7 @@ class RoleController extends Controller
     {
         try {
             /** @var Role|Cache $role */
-            $role = Cache::tags(['roles', 'roles_individual'])->remember($id, 60 * 60, function ($id) {
+            $role = Cache::tags('roles_individual')->remember($id, 60 * 60, function ($id) {
                 return Role::query()->select('id', 'role_name', 'created_at')->find($id);
             });
 
